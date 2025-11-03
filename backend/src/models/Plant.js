@@ -6,6 +6,30 @@ const plantSchema = new mongoose.Schema({
   room: { type: String, required: true },
   wateringFrequency: { type: Number, required: true }, // days
   lastWatered: { type: Date, default: Date.now },
+    // Keep a history of watering events so the app can show a timeline later.
+    // Each event records when it happened and whether fertilizer was applied.
+    wateringHistory: [
+      {
+        date: { type: Date, default: Date.now },
+        fertilizer: { type: Boolean, default: false },
+      },
+    ],
+    // Convenience fields for quick access to most recent timestamps
+    lastFertilized: { type: Date },
+    // Type of the plant (e.g., fern, succulent)
+    plantType: { type: String },
+    // Position of the plant in the room blueprint as percentages (0-100)
+    position: {
+      x: { type: Number },
+      y: { type: Number },
+    },
+    // Notes about the plant (freeform entries)
+    notes: [
+      {
+        text: { type: String },
+        date: { type: Date, default: Date.now },
+      },
+    ],
   imageUrl: String,
 });
 

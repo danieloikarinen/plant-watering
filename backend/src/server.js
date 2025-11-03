@@ -12,6 +12,7 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') });
 const app = express();
 const PORT = process.env.PORT || 4000;
 const PASSWORD = process.env.APP_PASSWORD;
+// Room model removed: using a single blueprint and plant.position instead
 
 // Middleware
 app.use(cors());
@@ -41,6 +42,19 @@ app.get("/api/plants", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// Get single plant by id
+app.get("/api/plants/:id", async (req, res) => {
+  try {
+    const plant = await Plant.findById(req.params.id);
+    if (!plant) return res.status(404).json({ error: "Plant not found" });
+    res.json(plant);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Rooms removed: single blueprint approach — plants carry a `room` string if needed
 
 // Create a new plant
 app.post("/api/plants", async (req, res) => {
@@ -79,8 +93,45 @@ app.post("/api/plants/:id/water", async (req, res) => {
     const plant = await Plant.findById(req.params.id);
     if (!plant) return res.status(404).json({ error: "Plant not found" });
 
-    plant.lastWatered = new Date();
+
+    // support sending { fertilizer: true, date: '2025-11-03T12:00' } in the request body
+    const { fertilizer, date } = req.body || {};
+
+    const now = new Date();
+    // If user provided a date (for backfilling history), use it; otherwise use now
+    const eventDate = date ? new Date(date) : now;
+
+    // Ensure wateringHistory exists and push new event
+    plant.wateringHistory = plant.wateringHistory || [];
+    plant.wateringHistory.push({ date: eventDate, fertilizer: !!fertilizer });
+
+    // Update convenience fields too (set to the event date)
+    plant.lastWatered = eventDate;
+    if (fertilizer) {
+      plant.lastFertilized = eventDate;
+    }
+
     await plant.save();
+    res.json(plant);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Add a freeform note to a plant
+app.post("/api/plants/:id/notes", async (req, res) => {
+  try {
+    const { text, date } = req.body || {};
+    if (!text) return res.status(400).json({ error: "Note text is required" });
+
+    const plant = await Plant.findById(req.params.id);
+    if (!plant) return res.status(404).json({ error: "Plant not found" });
+
+    const noteDate = date ? new Date(date) : new Date();
+    plant.notes = plant.notes || [];
+    plant.notes.push({ text, date: noteDate });
+    await plant.save();
+
     res.json(plant);
   } catch (err) {
     res.status(400).json({ error: err.message });
