@@ -5,8 +5,17 @@ import axios from "axios";
 function BackButton() {
   const location = useLocation();
   const navigate = useNavigate();
-  const fromPath = (location.state && location.state.from && (location.state.from.pathname + (location.state.from.search || ''))) || '/plants';
-  return <button onClick={() => navigate(fromPath)} className="px-3 py-1 border rounded">Back</button>;
+  // Prefer navigating back in history; fall back to the originating location state or '/'
+  return (
+    <button
+      onClick={() => {
+        if (window.history.length > 1) return navigate(-1);
+        const fromPath = (location.state && location.state.from && (location.state.from.pathname + (location.state.from.search || '')) ) || '/';
+        navigate(fromPath);
+      }}
+      className="px-3 py-1 border rounded"
+    >Back</button>
+  );
 }
 
 export default function PlantInfo({ password }) {
@@ -17,6 +26,7 @@ export default function PlantInfo({ password }) {
   const [noteLoading, setNoteLoading] = useState(false);
   const [editableRoom, setEditableRoom] = useState("");
   const [editableFreq, setEditableFreq] = useState(1);
+  const [editablePlantType, setEditablePlantType] = useState("");
 
   const fetchPlant = async () => {
     setLoading(true);
@@ -41,8 +51,23 @@ export default function PlantInfo({ password }) {
     if (plant) {
       setEditableRoom(plant.room || "");
       setEditableFreq(plant.wateringFrequency || 1);
+      setEditablePlantType(plant.plantType || "");
     }
   }, [plant]);
+
+  const navigate = useNavigate();
+
+  const deletePlant = async () => {
+    if (!confirm('Delete this plant? This cannot be undone.')) return;
+    try {
+      await axios.delete(`http://localhost:4000/api/plants/${id}`, { headers: { 'x-app-password': password } });
+      try { window.dispatchEvent(new Event('plantsUpdated')) } catch(e) {}
+      // go back to previous page
+      if (window.history.length > 1) navigate(-1); else navigate('/');
+    } catch (err) {
+      console.error('Failed to delete plant', err?.response?.data || err.message || err);
+    }
+  };
 
   const addNote = async (e) => {
     e.preventDefault();
@@ -66,14 +91,17 @@ export default function PlantInfo({ password }) {
 
   const updatePlant = async (updates) => {
     try {
+      // Send only the updated fields; backend merges them onto the document.
+      console.log('Updating plant', id, 'with', updates);
       const res = await axios.put(`http://localhost:4000/api/plants/${id}`, updates, {
         headers: { "x-app-password": password },
       });
+      console.log('Update response:', res.status, res.data);
       setPlant(res.data);
       try { window.dispatchEvent(new Event('plantsUpdated')) } catch(e) {}
       return res.data;
     } catch (err) {
-      console.error(err);
+      console.error('updatePlant error:', err?.response?.data || err.message || err);
     }
   };
 
@@ -86,8 +114,10 @@ export default function PlantInfo({ password }) {
     <div className="container mx-auto p-4 text-gray-100">
       <div className="flex items-center justify-between mb-4">
             <h1 className="text-2xl font-bold">More info — {plant.name}</h1>
-            {/* Return to previous page (passed via Link state) or fallback to /plants */}
-            <BackButton />
+            <div className="flex items-center space-x-2">
+                {/* Return to previous page (passed via Link state) or fallback to /plants */}
+                <BackButton />
+              </div>
           </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -138,7 +168,6 @@ export default function PlantInfo({ password }) {
         </div>
 
         <div className="border p-4 rounded">
-          <h2 className="font-semibold mb-2">Notes</h2>
           <div className="mb-4">
             <h3 className="font-semibold mb-2">Edit basic info</h3>
             <div className="space-y-2">
@@ -147,17 +176,23 @@ export default function PlantInfo({ password }) {
                 <input value={editableRoom} onChange={(e)=>setEditableRoom(e.target.value)} className="bg-gray-900 border border-gray-700 p-2 w-full text-gray-100 rounded" />
               </div>
               <div>
+                <label className="block text-sm mb-1">Plant type</label>
+                <input value={editablePlantType} onChange={(e)=>setEditablePlantType(e.target.value)} className="bg-gray-900 border border-gray-700 p-2 w-full text-gray-100 rounded" />
+              </div>
+              <div>
                 <label className="block text-sm mb-1">Watering frequency (days)</label>
                 <input type="number" value={editableFreq} onChange={(e)=>setEditableFreq(e.target.value)} min={1} className="bg-gray-900 border border-gray-700 p-2 w-full text-gray-100 rounded" />
               </div>
               <div className="flex space-x-2 mt-2">
                 <button onClick={async ()=>{
-                  await updatePlant({ room: editableRoom, wateringFrequency: Number(editableFreq) });
+                  await updatePlant({ room: editableRoom, wateringFrequency: Number(editableFreq), plantType: editablePlantType });
                 }} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Save</button>
-                <button onClick={()=>{ setEditableRoom(plant.room||""); setEditableFreq(plant.wateringFrequency||1); }} className="px-3 py-2 border rounded">Reset</button>
+                <button onClick={()=>{ setEditableRoom(plant.room||""); setEditableFreq(plant.wateringFrequency||1); setEditablePlantType(plant.plantType||""); }} className="px-3 py-2 border rounded">Reset</button>
               </div>
             </div>
           </div>
+
+          <h2 className="font-semibold mb-2">Notes</h2>
           <form onSubmit={addNote} className="mb-4">
             <textarea value={noteText} onChange={(e)=>setNoteText(e.target.value)} className="bg-gray-900 border border-gray-700 p-2 w-full mb-2 text-gray-100" rows={4} />
             <div className="flex space-x-2">
@@ -173,6 +208,9 @@ export default function PlantInfo({ password }) {
                 <div className="mt-1">{n.text}</div>
               </div>
             ))}
+          </div>
+          <div className="mt-4 flex justify-end">
+            <button onClick={deletePlant} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">Delete</button>
           </div>
         </div>
       </div>

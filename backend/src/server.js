@@ -70,9 +70,26 @@ app.post("/api/plants", async (req, res) => {
 // Update a plant
 app.put("/api/plants/:id", async (req, res) => {
   try {
-    const updated = await Plant.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(updated);
+    const plant = await Plant.findById(req.params.id);
+    if (!plant) return res.status(404).json({ error: 'Plant not found' });
+
+    // Debug logging to help trace why position updates might fail
+    console.log(`PUT /api/plants/${req.params.id} body:`, req.body);
+
+    // Apply updates safely: merge provided fields onto the existing document
+    // This avoids replacing arrays/objects unintentionally and ensures Mongoose
+    // casting/validation runs on save.
+    const updates = req.body || {};
+    Object.keys(updates).forEach((key) => {
+      plant[key] = updates[key];
+    });
+
+    console.log(`Saving plant ${plant._id} with updates.`);
+    await plant.save();
+    console.log(`Saved plant ${plant._id}`);
+    res.json(plant);
   } catch (err) {
+    console.error('Error updating plant:', err);
     res.status(400).json({ error: err.message });
   }
 });

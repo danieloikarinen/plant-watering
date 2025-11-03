@@ -6,6 +6,7 @@ import PlantList from "./components/PlantList";
 import PlantForm from "./components/PlantForm";
 import PlantInfo from "./components/PlantInfo";
 import PlantsPage from "./pages/PlantsPage";
+import PositionsPage from "./pages/PositionsPage";
 import "./styles/dark.css";
 
 function App() {
@@ -97,7 +98,7 @@ function App() {
           <ul className="flex items-center gap-3 text-sm">
             <li><Link to="/" className="text-gray-300 hover:text-white">Home</Link></li>
             <li><Link to="/plants" className="text-gray-300 hover:text-white">Plants</Link></li>
-            {/* Rooms are deprecated: use single blueprint in Plants view */}
+            <li><Link to="/positions" className="text-gray-300 hover:text-white">Positions</Link></li>
           </ul>
         </nav>
 
@@ -121,6 +122,7 @@ function App() {
           />
           <Route path="/plants/:id" element={<PlantInfo password={password} />} />
           <Route path="/plants" element={<PlantsPage password={password} />} />
+          <Route path="/positions" element={<PositionsPage password={password} />} />
         </Routes>
       </div>
     </div>

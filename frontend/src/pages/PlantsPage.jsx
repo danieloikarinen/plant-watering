@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, useLocation } from 'react-router-dom';
-import Blueprint from '../components/Blueprint';
+import { useLocation, Link } from 'react-router-dom';
+// Blueprint moved to a dedicated Positions page
 
 export default function PlantsPage({ password }) {
   const [plants, setPlants] = useState([]);
@@ -21,12 +21,20 @@ export default function PlantsPage({ password }) {
 
   const sorted = plants.slice().sort((a,b)=>{
     if (sort === 'lastWatered') {
-      const ad = new Date(a.lastWatered || (a.wateringHistory && a.wateringHistory[a.wateringHistory.length-1]?.date));
-      const bd = new Date(b.lastWatered || (b.wateringHistory && b.wateringHistory[b.wateringHistory.length-1]?.date));
+      const getLast = (p) => {
+        if (p.lastWatered) return new Date(p.lastWatered);
+        if (p.wateringHistory && p.wateringHistory.length) return new Date(p.wateringHistory[p.wateringHistory.length-1]?.date || 0);
+        return new Date(0);
+      };
+      const ad = getLast(a);
+      const bd = getLast(b);
       return bd - ad; // newest first
     }
     if (sort === 'plantType') {
       return (a.plantType || '').localeCompare(b.plantType || '');
+    }
+    if (sort === 'room') {
+      return (a.room || '').localeCompare(b.room || '');
     }
     return (a.name || '').localeCompare(b.name || '');
   });
@@ -45,13 +53,7 @@ export default function PlantsPage({ password }) {
           </select>
         </div>
       </div>
-
-      {/* Blueprint view: place your apartment image as frontend/public/blueprint.jpg */}
-      <div className="mb-6">
-        <Blueprint imageUrl={'/blueprint.jpg'} plants={plants} password={password} onPositionUpdated={(updated)=>{
-          setPlants(prev => prev.map(p => p._id === updated._id ? updated : p));
-        }} />
-      </div>
+      {/* Positions link removed from Plants page per user request */}
 
       <div className="space-y-2">
         {sorted.map(p => (
