@@ -124,11 +124,11 @@ export default function PlantList({ password }) {
     <>
       <div className="space-y-6">
         <section>
-          <h3 className="text-lg font-semibold mb-3">Water now</h3>
+          <h3 className="text-2xl font-bold mb-3">Kastele nyt</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {needsWater.length === 0 ? (
-              <div className="col-span-full text-center text-green-400 py-6">
-                All good — no plants need watering
+              <div className="col-span-full text-left text-green-400 py-6">
+                Kaikki kondiksessa :)
               </div>
             ) : (
               needsWater.map(plant => (
@@ -136,7 +136,7 @@ export default function PlantList({ password }) {
                 <div className="flex items-start justify-between">
                   <div>
                     <h2 className="font-bold text-lg">{plant.name}</h2>
-                    <p className="text-sm text-gray-300">Room: {plant.room}</p>
+                    <p className="text-sm text-gray-300">Huone: {plant.room}</p>
                     {(() => {
                       const last = (function(){
                         if (plant.lastWatered) return dayjs(plant.lastWatered);
@@ -144,12 +144,12 @@ export default function PlantList({ password }) {
                         return null;
                       })();
                       return (
-                        <p className="text-sm text-gray-400">Last watered: {last && last.isValid() ? last.fromNow() : 'Never'}</p>
+                        <p className="text-sm text-gray-400">Kasteltu viimeksi: {last && last.isValid() ? last.fromNow() : 'Never'}</p>
                       );
                     })()}
                     {(() => {
                       const lf = getLastFertilizedDate(plant);
-                      return lf && lf.isValid() ? <p className="text-xs text-gray-400">Last fertilized: {lf.fromNow()}</p> : null;
+                      return lf && lf.isValid() ? <p className="text-xs text-gray-400">Ravinne annettu: {lf.fromNow()}</p> : null;
                     })()}
                   </div>
                 </div>
@@ -160,7 +160,7 @@ export default function PlantList({ password }) {
                       onClick={() => waterPlant(plant._id)}
                       className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md"
                     >
-                      Water Now
+                      Kastele
                     </button>
 
                     <label className="flex items-center space-x-2 text-sm text-gray-200">
@@ -177,12 +177,12 @@ export default function PlantList({ password }) {
                         title="Water with fertilizer"
                         className="h-4 w-4"
                       />
-                      <span>Fertilize</span>
+                      <span>Ravinne</span>
                     </label>
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    <Link to={`/plants/${plant._id}`} className="bg-gray-700 hover:bg-gray-600 text-gray-100 px-3 py-1 rounded-md">More info</Link>
+                    <Link to={`/plants/${plant._id}`} className="bg-gray-700 hover:bg-gray-600 text-gray-100 px-3 py-1 rounded-md">Lisätietoja</Link>
                   </div>
                 </div>
               </div>
@@ -192,14 +192,14 @@ export default function PlantList({ password }) {
         </section>
 
         <section>
-          <h3 className="text-lg font-semibold mb-3">No need to water yet</h3>
+          <h3 className="text-2xl font-bold mb-3">Ei tarvii kastella vielä</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {notYet.map(plant => (
               <div key={plant._id} className="bg-gray-800 border border-gray-700 rounded-lg p-4 shadow-md">
                 <div className="flex items-start justify-between">
                   <div>
                     <h2 className="font-bold text-lg">{plant.name}</h2>
-                    <p className="text-sm text-gray-300">Room: {plant.room}</p>
+                    <p className="text-sm text-gray-300">Huone: {plant.room}</p>
                     {(() => {
                       const last = (function(){
                         if (plant.lastWatered) return dayjs(plant.lastWatered);
@@ -207,12 +207,12 @@ export default function PlantList({ password }) {
                         return null;
                       })();
                       return (
-                        <p className="text-sm text-gray-400">Last watered: {last && last.isValid() ? last.fromNow() : 'Never'}</p>
+                        <p className="text-sm text-gray-400">Kasteltu viimeksi: {last && last.isValid() ? last.fromNow() : 'Never'}</p>
                       );
                     })()}
                     {(() => {
                       const lf = getLastFertilizedDate(plant);
-                      return lf && lf.isValid() ? <p className="text-xs text-gray-400">Last fertilized: {lf.fromNow()}</p> : null;
+                      return lf && lf.isValid() ? <p className="text-xs text-gray-400">Ravinne annettu: {lf.fromNow()}</p> : null;
                     })()}
                   </div>
                 </div>
@@ -223,7 +223,7 @@ export default function PlantList({ password }) {
                       onClick={() => waterPlant(plant._id)}
                       className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md"
                     >
-                      Water Now
+                      Kastele
                     </button>
 
                     <label className="flex items-center space-x-2 text-sm text-gray-200">
@@ -240,12 +240,12 @@ export default function PlantList({ password }) {
                         title="Water with fertilizer"
                         className="h-4 w-4"
                       />
-                      <span>Fertilize</span>
+                      <span>Ravinne</span>
                     </label>
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    <Link to={`/plants/${plant._id}`} className="bg-gray-700 hover:bg-gray-600 text-gray-100 px-3 py-1 rounded-md">More info</Link>
+                    <Link to={`/plants/${plant._id}`} className="bg-gray-700 hover:bg-gray-600 text-gray-100 px-3 py-1 rounded-md">Lisätietoja</Link>
                   </div>
                 </div>
               </div>

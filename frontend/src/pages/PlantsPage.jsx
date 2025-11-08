@@ -42,14 +42,14 @@ export default function PlantsPage({ password }) {
   return (
     <div className="p-4">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold">All Plants</h2>
+        <h2 className="text-3xl font-bold">Kasvit</h2>
         <div className="flex items-center space-x-2">
-          <label className="text-sm">Sort by:</label>
+          <label className="text-sm">Järjestä:</label>
           <select value={sort} onChange={(e)=>setSort(e.target.value)} className="bg-gray-800 text-gray-100 p-1 rounded">
-            <option value="name">Name</option>
-            <option value="lastWatered">Last watered</option>
-            <option value="plantType">Plant type</option>
-            <option value="room">Room</option>
+            <option value="name">Nimi</option>
+            <option value="lastWatered">Viimeksi kasteltu</option>
+            <option value="plantType">Kasvityyppi</option>
+            <option value="room">Huone</option>
           </select>
         </div>
       </div>
@@ -60,10 +60,10 @@ export default function PlantsPage({ password }) {
           <div key={p._id} className="bg-gray-800 p-3 rounded flex items-center justify-between">
             <div>
               <div className="font-bold">{p.name}</div>
-              <div className="text-sm text-gray-400">{p.plantType || '—'} · Room: {p.room || '—'}</div>
+              <div className="text-sm text-gray-400">{p.plantType || '—'} · Huone: {p.room || '—'}</div>
             </div>
             <div className="flex items-center space-x-2">
-              <Link to={`/plants/${p._id}`} state={{ from: location }} className="px-3 py-1 bg-gray-700 rounded text-gray-100">More</Link>
+              <Link to={`/plants/${p._id}`} state={{ from: location }} className="px-3 py-1 bg-gray-700 rounded text-gray-100">Lisätietoja</Link>
             </div>
           </div>
         ))}

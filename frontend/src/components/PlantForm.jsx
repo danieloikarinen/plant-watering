@@ -5,7 +5,7 @@ export default function PlantForm({ password, onAdded }) {
   const [name, setName] = useState("");
   const [room, setRoom] = useState("");
   const [plantType, setPlantType] = useState("");
-  const [wateringFrequency, setWateringFrequency] = useState(1);
+  const [wateringFrequency, setWateringFrequency] = useState();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,10 +34,10 @@ export default function PlantForm({ password, onAdded }) {
 
   return (
     <form onSubmit={handleSubmit} className="bg-gray-900 text-gray-100 p-4 rounded-md">
-      <h2 className="font-bold mb-3 text-lg">Add New Plant</h2>
+      <h2 className="font-bold mb-3 text-lg">Lisää uusi kasvi</h2>
       <input
         type="text"
-        placeholder="Name"
+        placeholder="Nimi"
         value={name}
         onChange={(e) => setName(e.target.value)}
         className="bg-gray-800 border border-gray-700 p-2 w-full mb-2 rounded"
@@ -45,14 +45,14 @@ export default function PlantForm({ password, onAdded }) {
       />
         <input
           type="text"
-          placeholder="Plant type (e.g., fern, succulent)"
+          placeholder="Kasvityyppi"
           value={plantType}
           onChange={(e) => setPlantType(e.target.value)}
           className="bg-gray-800 border border-gray-700 p-2 w-full mb-2 rounded"
         />
       <input
         type="text"
-        placeholder="Room"
+        placeholder="Huone"
         value={room}
         onChange={(e) => setRoom(e.target.value)}
         className="bg-gray-800 border border-gray-700 p-2 w-full mb-2 rounded"
@@ -60,16 +60,15 @@ export default function PlantForm({ password, onAdded }) {
       />
       <input
         type="number"
-        placeholder="Watering Frequency (days)"
+        placeholder="Kasteluväli (päivinä)"
         value={wateringFrequency}
         onChange={(e) => setWateringFrequency(e.target.value)}
         className="bg-gray-800 border border-gray-700 p-2 w-full mb-3 rounded"
-        min={1}
         required
       />
       <div className="flex items-center justify-end">
         <button type="submit" className="bg-green-400 hover:bg-green-500 text-black px-4 py-2 rounded-md font-semibold">
-          Add Plant
+          Lisää kasvi
         </button>
       </div>
     </form>

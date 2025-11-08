@@ -80,20 +80,20 @@ function App() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-neutral-900 to-black text-gray-100">
       <div className="max-w-5xl mx-auto p-6">
         <header className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-extrabold tracking-tight">🌿 Plant Watering Tracker</h1>
+          <h1 className="text-8xl font-extrabold tracking-tight">Kasvien kastelu</h1>
           <div className="flex items-center space-x-3">
-            <Link to="/add" className="bg-green-500 hover:bg-green-600 text-black px-4 py-2 rounded-md font-semibold">Add Plant</Link>
+            <Link to="/add" className="bg-green-500 hover:bg-green-600 text-black px-4 py-2 rounded-md font-semibold">Lisää kasvi</Link>
             {isAuthorized && (
-              <button onClick={handleLogout} className="px-3 py-2 border rounded text-sm">Logout</button>
+              <button onClick={handleLogout} className="px-3 py-2 border rounded text-sm">Kirjaudu ulos</button>
             )}
           </div>
         </header>
 
         <nav className="mb-4">
-          <ul className="flex items-center gap-3 text-sm">
-            <li><Link to="/" className="text-gray-300 hover:text-white">Home</Link></li>
-            <li><Link to="/plants" className="text-gray-300 hover:text-white">Plants</Link></li>
-            <li><Link to="/positions" className="text-gray-300 hover:text-white">Positions</Link></li>
+          <ul className="flex items-center gap-3 text-base">
+            <li><Link to="/" className="text-gray-300 hover:text-white">Yleisnäkymä</Link></li>
+            <li><Link to="/plants" className="text-gray-300 hover:text-white">Kasvit</Link></li>
+            <li><Link to="/positions" className="text-gray-300 hover:text-white">Sijainnit</Link></li>
           </ul>
         </nav>
 

@@ -14,7 +14,7 @@ function BackButton() {
         navigate(fromPath);
       }}
       className="px-3 py-1 border rounded"
-    >Back</button>
+    >Takaisin</button>
   );
 }
 
@@ -105,15 +105,15 @@ export default function PlantInfo({ password }) {
     }
   };
 
-  if (loading) return <div className="p-4">Loading...</div>;
-  if (!plant) return <div className="p-4">Plant not found</div>;
+  if (loading) return <div className="p-4">Ladataan...</div>;
+  if (!plant) return <div className="p-4">Kasvia ei löytynyt</div>;
 
   const sortedHistory = (plant.wateringHistory || []).slice().sort((a,b)=> new Date(b.date) - new Date(a.date));
 
   return (
     <div className="container mx-auto p-4 text-gray-100">
       <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-bold">More info — {plant.name}</h1>
+            <h1 className="text-3xl font-bold">{plant.name}</h1>
             <div className="flex items-center space-x-2">
                 {/* Return to previous page (passed via Link state) or fallback to /plants */}
                 <BackButton />
@@ -122,22 +122,22 @@ export default function PlantInfo({ password }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="border p-4 rounded">
-          <h2 className="font-semibold mb-2">Watering history</h2>
+          <h2 className="text-lg font-semibold mb-2">Kasteluhistoria</h2>
           {sortedHistory.length === 0 ? (
-            <p className="text-sm text-gray-600">No watering history yet.</p>
+            <p className="text-sm text-gray-600">Ei kasteluhistoriaa vielä.</p>
           ) : (
             <ul className="space-y-2 max-h-64 overflow-auto">
               {sortedHistory.map((ev, idx) => (
                 <li key={idx} className="border p-2 rounded">
                   <div className="font-medium">{new Date(ev.date).toLocaleString()}</div>
-                  <div className="text-sm text-gray-600">{ev.fertilizer ? 'With fertilizer' : 'Water only'}</div>
+                  <div className="text-sm text-gray-600">{ev.fertilizer ? 'Ravinne' : 'Ei ravinnetta'}</div>
                 </li>
               ))}
             </ul>
           )}
 
           <div className="mt-4">
-            <h3 className="font-semibold mb-2">Add missing history</h3>
+            <h3 className="text-lg font-semibold mb-2">Lisää kastelukerta</h3>
             {/* Reuse same simple form as modal used previously */}
             <form onSubmit={async (e)=>{
               e.preventDefault();
@@ -152,16 +152,16 @@ export default function PlantInfo({ password }) {
               }catch(err){console.error(err)}
             }}>
               <div className="mb-2">
-                <label className="block text-sm mb-1">Date/time</label>
+                <label className="block text-sm mb-1">Päivämäärä ja aika</label>
                 <input type="datetime-local" name="date" className="border p-2 w-full" />
-                <div className="text-xs text-gray-500">Leave empty to use current time</div>
+                <div className="text-xs text-gray-500">Jätä tyhjäksi käyttääksesi nykyistä aikaa</div>
               </div>
               <label className="flex items-center space-x-2 mb-2">
                 <input type="checkbox" name="fertilizer" />
-                <span>Fertilizer applied</span>
+                <span>Ravinne lisätty</span>
               </label>
               <div>
-                <button className="bg-green-500 text-white px-4 py-2 rounded" type="submit">Add history</button>
+                <button className="bg-green-500 text-white px-4 py-2 rounded" type="submit">Lisää kastelu</button>
               </div>
             </form>
           </div>
@@ -169,35 +169,35 @@ export default function PlantInfo({ password }) {
 
         <div className="border p-4 rounded">
           <div className="mb-4">
-            <h3 className="font-semibold mb-2">Edit basic info</h3>
+            <h3 className="text-lg font-semibold mb-2">Muokkaa kasvin tietoja</h3>
             <div className="space-y-2">
               <div>
-                <label className="block text-sm mb-1">Room</label>
+                <label className="block text-sm mb-1">Huone</label>
                 <input value={editableRoom} onChange={(e)=>setEditableRoom(e.target.value)} className="bg-gray-900 border border-gray-700 p-2 w-full text-gray-100 rounded" />
               </div>
               <div>
-                <label className="block text-sm mb-1">Plant type</label>
+                <label className="block text-sm mb-1">Kasvityyppi</label>
                 <input value={editablePlantType} onChange={(e)=>setEditablePlantType(e.target.value)} className="bg-gray-900 border border-gray-700 p-2 w-full text-gray-100 rounded" />
               </div>
               <div>
-                <label className="block text-sm mb-1">Watering frequency (days)</label>
+                <label className="block text-sm mb-1">Kasteluväli (päivinä)</label>
                 <input type="number" value={editableFreq} onChange={(e)=>setEditableFreq(e.target.value)} min={1} className="bg-gray-900 border border-gray-700 p-2 w-full text-gray-100 rounded" />
               </div>
               <div className="flex space-x-2 mt-2">
                 <button onClick={async ()=>{
                   await updatePlant({ room: editableRoom, wateringFrequency: Number(editableFreq), plantType: editablePlantType });
-                }} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Save</button>
-                <button onClick={()=>{ setEditableRoom(plant.room||""); setEditableFreq(plant.wateringFrequency||1); setEditablePlantType(plant.plantType||""); }} className="px-3 py-2 border rounded">Reset</button>
+                }} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Tallenna</button>
+                <button onClick={()=>{ setEditableRoom(plant.room||""); setEditableFreq(plant.wateringFrequency||1); setEditablePlantType(plant.plantType||""); }} className="px-3 py-2 border rounded">Nollaa muutokset</button>
               </div>
             </div>
           </div>
 
-          <h2 className="font-semibold mb-2">Notes</h2>
+          <h2 className="text-lg font-semibold mb-2">Muistiinpanot</h2>
           <form onSubmit={addNote} className="mb-4">
             <textarea value={noteText} onChange={(e)=>setNoteText(e.target.value)} className="bg-gray-900 border border-gray-700 p-2 w-full mb-2 text-gray-100" rows={4} />
             <div className="flex space-x-2">
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded" disabled={noteLoading}>{noteLoading ? 'Saving...' : 'Add note'}</button>
-              <button type="button" onClick={()=>setNoteText('')} className="px-3 py-2 border rounded">Clear</button>
+              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded" disabled={noteLoading}>{noteLoading ? 'Tallennetaan...' : 'Lisää muistiinpano'}</button>
+              <button type="button" onClick={()=>setNoteText('')} className="px-3 py-2 border rounded">Tyhjennä</button>
             </div>
           </form>
 
@@ -212,7 +212,7 @@ export default function PlantInfo({ password }) {
         </div>
       </div>
         <div className="mt-4 flex justify-end">
-        <button onClick={deletePlant} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">Delete</button>
+        <button onClick={deletePlant} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">Poista kasvi :(</button>
         </div>
     </div>
   );

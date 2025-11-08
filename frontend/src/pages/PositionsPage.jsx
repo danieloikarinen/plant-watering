@@ -19,8 +19,8 @@ export default function PositionsPage({ password }) {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">Plant positions</h2>
-      <p className="text-sm text-gray-400 mb-4">Drag pins on the blueprint to reposition plants.</p>
+      <h2 className="text-xl font-semibold mb-4">Kasvien sijainnit kämpässä</h2>
+      {/* <p className="text-sm text-gray-400 mb-4">Vedä kasveja muokataksesi niiden sijainteja tai avaa niiden omat sivut klikkaamalla ollessa tarkastelutilassa.</p> */}
 
       <Blueprint
         imageUrl={pohja}

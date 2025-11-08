@@ -115,9 +115,9 @@ export default function Blueprint({ imageUrl = '/assets/pohja_chatgpt.png', plan
     <div>
       <div className="mb-2 flex items-center space-x-2">
         <button onClick={() => setEditing(e => !e)} className={`px-3 py-1 rounded ${editing ? 'bg-red-600 text-white' : 'bg-gray-700 text-white'}`}>
-          {editing ? 'Exit edit' : 'Edit positions'}
+          {editing ? 'Tallenna' : 'Muokkaa sijainteja'}
         </button>
-        <div className="text-sm text-gray-400">{editing ? 'Drag pins to move plants (touch supported)' : 'Inspect mode — hover pins to see plant names'}</div>
+        <div className="text-sm text-gray-400">{editing ? 'Vedä kasveja muokataksesi niiden sijainteja' : 'Tarkastelutila - klikkaa kasvia avataksesi sen tiedot'}</div>
       </div>
 
       <div style={{ position: 'relative', width: '100%', maxWidth: 1000 }}>
