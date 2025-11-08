@@ -37,7 +37,18 @@ app.get("/", (req, res) => {
 app.get("/api/plants", async (req, res) => {
   try {
     const plants = await Plant.find();
-    res.json(plants);
+    // Normalize returned documents so front-end doesn't see misleading convenience fields
+    const normalize = (p) => {
+      const obj = p.toObject ? p.toObject() : { ...p };
+      obj.wateringHistory = obj.wateringHistory || [];
+      // If there's no watering history, treat lastWatered/lastFertilized as absent
+      if (!obj.wateringHistory.length) {
+        delete obj.lastWatered;
+        delete obj.lastFertilized;
+      }
+      return obj;
+    };
+    res.json(plants.map(normalize));
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -48,7 +59,13 @@ app.get("/api/plants/:id", async (req, res) => {
   try {
     const plant = await Plant.findById(req.params.id);
     if (!plant) return res.status(404).json({ error: "Plant not found" });
-    res.json(plant);
+    const obj = plant.toObject ? plant.toObject() : { ...plant };
+    obj.wateringHistory = obj.wateringHistory || [];
+    if (!obj.wateringHistory.length) {
+      delete obj.lastWatered;
+      delete obj.lastFertilized;
+    }
+    res.json(obj);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -59,8 +76,31 @@ app.get("/api/plants/:id", async (req, res) => {
 // Create a new plant
 app.post("/api/plants", async (req, res) => {
   try {
-    const plant = new Plant(req.body);
+    // Only accept allowed fields to avoid accidental timestamp defaults from previous schema versions.
+    const payload = {
+      name: req.body.name,
+      room: req.body.room,
+      wateringFrequency: req.body.wateringFrequency,
+      plantType: req.body.plantType,
+      position: req.body.position,
+      imageUrl: req.body.imageUrl,
+      notes: req.body.notes || [],
+    };
+    const plant = new Plant(payload);
+
+    // Ensure we don't set lastWatered/lastFertilized unless explicitly provided
+    if (req.body.lastWatered) plant.lastWatered = req.body.lastWatered;
+    if (req.body.lastFertilized) plant.lastFertilized = req.body.lastFertilized;
+
     await plant.save();
+
+    // Defensive fix: if wateringHistory is empty but lastWatered was somehow set (leftover DB/schema defaults), clear it.
+    if ((!plant.wateringHistory || plant.wateringHistory.length === 0) && plant.lastWatered) {
+      plant.lastWatered = undefined;
+      plant.lastFertilized = undefined;
+      await plant.save();
+    }
+
     res.status(201).json(plant);
   } catch (err) {
     res.status(400).json({ error: err.message });

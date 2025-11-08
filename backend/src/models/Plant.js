@@ -5,15 +5,16 @@ const plantSchema = new mongoose.Schema({
   name: { type: String, required: true },
   room: { type: String, required: true },
   wateringFrequency: { type: Number, required: true }, // days
-  lastWatered: { type: Date, default: Date.now },
-    // Keep a history of watering events so the app can show a timeline later.
-    // Each event records when it happened and whether fertilizer was applied.
-    wateringHistory: [
-      {
-        date: { type: Date, default: Date.now },
-        fertilizer: { type: Boolean, default: false },
-      },
-    ],
+  // lastWatered should be empty by default so newly-added plants are treated as "never watered"
+  lastWatered: { type: Date },
+  // Keep a history of watering events so the app can show a timeline later.
+  // Each event records when it happened and whether fertilizer was applied.
+  wateringHistory: [
+    {
+      date: { type: Date },
+      fertilizer: { type: Boolean, default: false },
+    },
+  ],
     // Convenience fields for quick access to most recent timestamps
     lastFertilized: { type: Date },
     // Type of the plant (e.g., fern, succulent)

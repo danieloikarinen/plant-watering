@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { Routes, Route } from "react-router-dom";
 import PlantList from "./components/PlantList";
-import PlantForm from "./components/PlantForm";
+import AddPlant from "./pages/AddPlant";
 import PlantInfo from "./components/PlantInfo";
 import PlantsPage from "./pages/PlantsPage";
 import PositionsPage from "./pages/PositionsPage";
@@ -12,7 +12,7 @@ import "./styles/dark.css";
 function App() {
   const [password, setPassword] = useState("");
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [showAdd, setShowAdd] = useState(false);
+  // showAdd removed: Add Plant now has its own page
   const [rememberMe, setRememberMe] = useState(false);
 
   // initialize from localStorage so login persists across pages/refresh
@@ -82,12 +82,7 @@ function App() {
         <header className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-extrabold tracking-tight">🌿 Plant Watering Tracker</h1>
           <div className="flex items-center space-x-3">
-            <button
-              onClick={() => setShowAdd((s) => !s)}
-              className="bg-green-500 hover:bg-green-600 text-black px-4 py-2 rounded-md font-semibold"
-            >
-              {showAdd ? "Close" : "Add Plant"}
-            </button>
+            <Link to="/add" className="bg-green-500 hover:bg-green-600 text-black px-4 py-2 rounded-md font-semibold">Add Plant</Link>
             {isAuthorized && (
               <button onClick={handleLogout} className="px-3 py-2 border rounded text-sm">Logout</button>
             )}
@@ -107,19 +102,15 @@ function App() {
             path="/"
             element={
               <>
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {showAdd && (
-                    <aside className="lg:col-span-1 bg-gray-800 p-4 rounded-lg shadow-md">
-                      <PlantForm password={password} />
-                    </aside>
-                  )}
-                  <main className={`${showAdd ? "lg:col-span-2" : "lg:col-span-3"}`}>
+                <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
+                  <main>
                     <PlantList password={password} />
                   </main>
                 </div>
               </>
             }
           />
+          <Route path="/add" element={<AddPlant password={password} />} />
           <Route path="/plants/:id" element={<PlantInfo password={password} />} />
           <Route path="/plants" element={<PlantsPage password={password} />} />
           <Route path="/positions" element={<PositionsPage password={password} />} />

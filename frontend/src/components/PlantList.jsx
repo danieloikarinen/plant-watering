@@ -49,27 +49,42 @@ export default function PlantList({ password }) {
 
   // helper: return Dayjs of the most recent watering (lastWatered field or last entry in wateringHistory)
   const getLastWateredDate = (plant) => {
-    if (plant.lastWatered) return dayjs(plant.lastWatered);
-    if (plant.wateringHistory && plant.wateringHistory.length) {
-      const last = plant.wateringHistory[plant.wateringHistory.length - 1];
-      // history entries might be objects like { date, fertilizer }
-      return dayjs(last?.date ?? last);
+    // Compute newest date across lastWatered and wateringHistory entries
+    let newest = null;
+    if (plant.lastWatered) {
+      const lw = dayjs(plant.lastWatered);
+      if (lw && lw.isValid()) newest = lw;
     }
-    return null;
+    if (plant.wateringHistory && plant.wateringHistory.length) {
+      for (let i = 0; i < plant.wateringHistory.length; i++) {
+        const ev = plant.wateringHistory[i];
+        const d = dayjs(ev && typeof ev === 'object' ? (ev.date ?? ev) : ev);
+        if (!d || !d.isValid()) continue;
+        if (!newest || d.isAfter(newest)) newest = d;
+      }
+    }
+    return newest;
   };
 
   // helper: return Dayjs of the most recent fertilization (lastFertilized or last wateringHistory entry with fertilizer)
   const getLastFertilizedDate = (plant) => {
-    if (plant.lastFertilized) return dayjs(plant.lastFertilized);
+    // Prefer the most recent fertilizer event from wateringHistory, but also consider lastFertilized
+    let newest = null;
     if (plant.wateringHistory && plant.wateringHistory.length) {
-      // find last entry with fertilizer true
-      for (let i = plant.wateringHistory.length - 1; i >= 0; i--) {
+      for (let i = 0; i < plant.wateringHistory.length; i++) {
         const ev = plant.wateringHistory[i];
         const hasF = ev && (typeof ev === 'object' ? !!ev.fertilizer : false);
-        if (hasF) return dayjs(ev.date ?? ev);
+        if (!hasF) continue;
+        const d = dayjs(ev && typeof ev === 'object' ? (ev.date ?? ev) : ev);
+        if (!d || !d.isValid()) continue;
+        if (!newest || d.isAfter(newest)) newest = d;
       }
     }
-    return null;
+    if (plant.lastFertilized) {
+      const lf = dayjs(plant.lastFertilized);
+      if (lf && lf.isValid() && (!newest || lf.isAfter(newest))) newest = lf;
+    }
+    return newest;
   };
 
   plants.forEach(plant => {
@@ -111,7 +126,12 @@ export default function PlantList({ password }) {
         <section>
           <h3 className="text-lg font-semibold mb-3">Water now</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {needsWater.map(plant => (
+            {needsWater.length === 0 ? (
+              <div className="col-span-full text-center text-green-400 py-6">
+                All good — no plants need watering
+              </div>
+            ) : (
+              needsWater.map(plant => (
               <div key={plant._id} className="bg-gray-800 border border-gray-700 rounded-lg p-4 shadow-md">
                 <div className="flex items-start justify-between">
                   <div>
@@ -166,7 +186,8 @@ export default function PlantList({ password }) {
                   </div>
                 </div>
               </div>
-            ))}
+            ))
+          )}
           </div>
         </section>
 

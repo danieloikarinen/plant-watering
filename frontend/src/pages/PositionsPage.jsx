@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Blueprint from '../components/Blueprint';
-import pohja from '../assets/pohja_chatgpt.png';
+import pohja from '../assets/pohja_edited.png';
 
 export default function PositionsPage({ password }) {
   const [plants, setPlants] = useState([]);

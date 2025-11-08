@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-export default function PlantForm({ password }) {
+export default function PlantForm({ password, onAdded }) {
   const [name, setName] = useState("");
   const [room, setRoom] = useState("");
   const [plantType, setPlantType] = useState("");
@@ -25,6 +25,8 @@ export default function PlantForm({ password }) {
         // fallback to reload if dispatch fails for some reason
         window.location.reload();
       }
+        // call optional callback (e.g. to navigate to a different page)
+        try { if (onAdded) onAdded(); } catch(e) {}
     } catch (err) {
       console.error(err);
     }

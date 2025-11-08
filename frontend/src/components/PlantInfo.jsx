@@ -209,11 +209,11 @@ export default function PlantInfo({ password }) {
               </div>
             ))}
           </div>
-          <div className="mt-4 flex justify-end">
-            <button onClick={deletePlant} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">Delete</button>
-          </div>
         </div>
       </div>
+        <div className="mt-4 flex justify-end">
+        <button onClick={deletePlant} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">Delete</button>
+        </div>
     </div>
   );
 }
