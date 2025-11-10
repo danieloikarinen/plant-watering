@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Blueprint from '../components/Blueprint';
 import pohja from '../assets/pohja_edited.png';
+const backendApi = process.env.REACT_APP_BACKEND_URL;
 
 export default function PositionsPage({ password }) {
   const [plants, setPlants] = useState([]);
 
   const fetchPlants = async () => {
     try {
-      const res = await axios.get('http://localhost:4000/api/plants', { headers: { 'x-app-password': password } });
+      const res = await axios.get(`${backendApi}`, { headers: { 'x-app-password': password } });
       setPlants(res.data);
     } catch (err) {
       console.error(err);

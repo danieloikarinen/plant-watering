@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useLocation, Link } from 'react-router-dom';
-// Blueprint moved to a dedicated Positions page
+const backendApi = process.env.REACT_APP_BACKEND_URL;
 
 export default function PlantsPage({ password }) {
   const [plants, setPlants] = useState([]);
@@ -10,7 +10,7 @@ export default function PlantsPage({ password }) {
 
   const fetchPlants = async () => {
     try {
-      const res = await axios.get('http://localhost:4000/api/plants', { headers: { 'x-app-password': password } });
+      const res = await axios.get(`${backendApi}`, { headers: { 'x-app-password': password } });
       setPlants(res.data);
     } catch (err) {
       console.error(err);
