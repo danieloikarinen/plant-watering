@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-const backendApi = process.env.REACT_APP_BACKEND_URL;
+const backendApi = process.env.VITE_API_BASE_URL;
 
 dayjs.extend(relativeTime);
 dayjs.extend(isSameOrBefore);

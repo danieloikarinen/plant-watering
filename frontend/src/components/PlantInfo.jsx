@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-const backendApi = process.env.REACT_APP_BACKEND_URL;
+const backendApi = process.env.VITE_API_BASE_URL;
 
 function BackButton() {
   const location = useLocation();

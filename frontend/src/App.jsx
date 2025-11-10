@@ -51,29 +51,41 @@ function App() {
 
   if (!isAuthorized) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="p-6 border rounded shadow">
-          <h2 className="mb-4 text-lg font-bold">Enter App Password</h2>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
+        <div className="bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-sm border border-emerald-200">
+          <h2 className="mb-6 text-2xl font-bold text-center text-emerald-700">
+            Kasvien kastelu - Kirjaudu sisään
+          </h2>
+
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="border p-2 w-full mb-4"
+            placeholder="Syötä salis"
+            className="w-full p-3 border border-emerald-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 mb-4"
           />
-          <label className="flex items-center mb-4 text-sm">
-            <input type="checkbox" checked={rememberMe} onChange={(e)=>setRememberMe(e.target.checked)} className="mr-2" />
-            Remember me
+
+          <label className="flex items-center mb-4 text-sm text-gray-700">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="mr-2 accent-emerald-600"
+            />
+            Muista meikämandoliini
           </label>
+
           <button
             onClick={handleLogin}
-            className="bg-green-500 text-white px-4 py-2 rounded"
+            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-lg transition"
           >
-            Login
+            Kirjaudu
           </button>
         </div>
       </div>
     );
   }
+
 
 
   return (

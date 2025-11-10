@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-const backendApi = process.env.REACT_APP_BACKEND_URL;
+const backendApi = process.env.VITE_API_BASE_URL;
 
 // Enhanced Blueprint: touch + mouse support, edit toggle, optimistic saves
 export default function Blueprint({ imageUrl = '/assets/pohja_chatgpt.png', plants = [], password, onPositionUpdated }) {

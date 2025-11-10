@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-const backendApi = process.env.REACT_APP_BACKEND_URL;
+const backendApi = process.env.VITE_API_BASE_URL;
 
 export default function PlantHistory({ plant: initialPlant, password, onClose }) {
   const [plant, setPlant] = useState(initialPlant);

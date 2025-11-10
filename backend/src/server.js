@@ -15,7 +15,9 @@ const PASSWORD = process.env.APP_PASSWORD;
 // Room model removed: using a single blueprint and plant.position instead
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ["https://kasvien-kastelu.vercel.app/", "http://localhost:5173"]
+}));
 app.use(bodyParser.json());
 
 // Simple shared password authentication
