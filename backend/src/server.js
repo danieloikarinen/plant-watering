@@ -16,7 +16,9 @@ const PASSWORD = process.env.APP_PASSWORD;
 
 // Middleware
 app.use(cors({
-  origin: ["https://kasvien-kastelu.vercel.app/", "http://localhost:5173"]
+  origin: ["https://kasvien-kastelu.vercel.app/", "http://localhost:5173"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true, // if you plan to use cookies/auth
 }));
 app.use(bodyParser.json());
 
