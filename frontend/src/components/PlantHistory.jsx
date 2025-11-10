@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-const backendApi = process.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function PlantHistory({ plant: initialPlant, password, onClose }) {
   const [plant, setPlant] = useState(initialPlant);
@@ -21,7 +21,7 @@ export default function PlantHistory({ plant: initialPlant, password, onClose })
       if (date) payload.date = date; // datetime-local is acceptable
 
       const res = await axios.post(
-        `${backendApi}${plant._id}/water`,
+        `${API_BASE_URL}/api/plants/${plant._id}/water`,
         payload,
         { headers: { "x-app-password": password } }
       );

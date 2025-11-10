@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-const backendApi = process.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Enhanced Blueprint: touch + mouse support, edit toggle, optimistic saves
 export default function Blueprint({ imageUrl = '/assets/pohja_chatgpt.png', plants = [], password, onPositionUpdated }) {
@@ -71,7 +71,7 @@ export default function Blueprint({ imageUrl = '/assets/pohja_chatgpt.png', plan
       // that check required fields don't reject the update.
       const payload = { ...plant, position: { x: pos.x, y: pos.y } };
       const res = await axios.put(
-        `${backendApi}${plant._id}`,
+        `${API_BASE_URL}/api/plants/${plant._id}`,
         payload,
         { headers: { 'x-app-password': password } }
       );

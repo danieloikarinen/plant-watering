@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-const backendApi = process.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 dayjs.extend(relativeTime);
 dayjs.extend(isSameOrBefore);
@@ -16,7 +16,7 @@ export default function PlantList({ password }) {
 
   const fetchPlants = async () => {
     try {
-      const res = await axios.get(`${backendApi}`, {
+      const res = await axios.get(`${API_BASE_URL}/api/plants`, {
         headers: { "x-app-password": password },
       });
       setPlants(res.data);
@@ -28,7 +28,7 @@ export default function PlantList({ password }) {
   const waterPlant = async (id) => {
     const fertilizer = !!fertilizerChecked[id];
     await axios.post(
-      `${backendApi}/${id}/water`,
+      `${API_BASE_URL}/api/plants/${id}/water`,
       { fertilizer },
       { headers: { "x-app-password": password } }
     );

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-const backendApi = process.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function PlantForm({ password, onAdded }) {
   const [name, setName] = useState("");
@@ -12,7 +12,7 @@ export default function PlantForm({ password, onAdded }) {
     e.preventDefault();
     try {
       await axios.post(
-        `${backendApi}`,
+        `${API_BASE_URL}/api/plants/`,
         { name, room, plantType, wateringFrequency },
         { headers: { "x-app-password": password } }
       );
