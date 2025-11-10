@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+const backendApi = process.env.REACT_APP_BACKEND_URL;
 
 export default function PlantForm({ password, onAdded }) {
   const [name, setName] = useState("");
@@ -11,7 +12,7 @@ export default function PlantForm({ password, onAdded }) {
     e.preventDefault();
     try {
       await axios.post(
-        "http://localhost:4000/api/plants",
+        `${backendApi}`,
         { name, room, plantType, wateringFrequency },
         { headers: { "x-app-password": password } }
       );

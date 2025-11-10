@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+const backendApi = process.env.REACT_APP_BACKEND_URL;
 
 function BackButton() {
   const location = useLocation();
@@ -31,7 +32,7 @@ export default function PlantInfo({ password }) {
   const fetchPlant = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:4000/api/plants/${id}`, {
+      const res = await axios.get(`${backendApi}${id}`, {
         headers: { "x-app-password": password },
       });
       setPlant(res.data);
@@ -60,7 +61,7 @@ export default function PlantInfo({ password }) {
   const deletePlant = async () => {
     if (!confirm('Delete this plant? This cannot be undone.')) return;
     try {
-      await axios.delete(`http://localhost:4000/api/plants/${id}`, { headers: { 'x-app-password': password } });
+      await axios.delete(`${backendApi}${id}`, { headers: { 'x-app-password': password } });
       try { window.dispatchEvent(new Event('plantsUpdated')) } catch(e) {}
       // go back to previous page
       if (window.history.length > 1) navigate(-1); else navigate('/');
@@ -75,7 +76,7 @@ export default function PlantInfo({ password }) {
     setNoteLoading(true);
     try {
       const res = await axios.post(
-        `http://localhost:4000/api/plants/${id}/notes`,
+        `${backendApi}${id}/notes`,
         { text: noteText },
         { headers: { "x-app-password": password } }
       );
@@ -93,7 +94,7 @@ export default function PlantInfo({ password }) {
     try {
       // Send only the updated fields; backend merges them onto the document.
       console.log('Updating plant', id, 'with', updates);
-      const res = await axios.put(`http://localhost:4000/api/plants/${id}`, updates, {
+      const res = await axios.put(`${backendApi}${id}`, updates, {
         headers: { "x-app-password": password },
       });
       console.log('Update response:', res.status, res.data);
@@ -145,7 +146,7 @@ export default function PlantInfo({ password }) {
               const date = form.date?.value || null;
               const fertilizer = form.fertilizer?.checked || false;
               try{
-                const res = await axios.post(`http://localhost:4000/api/plants/${id}/water`, { date, fertilizer }, { headers: { 'x-app-password': password } });
+                const res = await axios.post(`${backendApi}${id}/water`, { date, fertilizer }, { headers: { 'x-app-password': password } });
                 setPlant(res.data);
                 try{ window.dispatchEvent(new Event('plantsUpdated')) }catch(e){}
                 form.reset();

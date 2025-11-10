@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+const backendApi = process.env.REACT_APP_BACKEND_URL;
 
 export default function PlantHistory({ plant: initialPlant, password, onClose }) {
   const [plant, setPlant] = useState(initialPlant);
@@ -20,7 +21,7 @@ export default function PlantHistory({ plant: initialPlant, password, onClose })
       if (date) payload.date = date; // datetime-local is acceptable
 
       const res = await axios.post(
-        `http://localhost:4000/api/plants/${plant._id}/water`,
+        `${backendApi}${plant._id}/water`,
         payload,
         { headers: { "x-app-password": password } }
       );
