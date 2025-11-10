@@ -4,6 +4,9 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
 
+// Set credentials globally for all Axios requests
+axios.defaults.withCredentials = true;
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>

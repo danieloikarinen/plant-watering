@@ -22,8 +22,6 @@ app.use(cors({
 }));
 app.use(bodyParser.json());
 
-app.options("*", cors()); // enable pre-flight for all routes
-
 // Simple shared password authentication
 app.use((req, res, next) => {
   if (!PASSWORD) return next(); // no password set, allow all
