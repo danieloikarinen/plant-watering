@@ -17,29 +17,45 @@ function App() {
 
   // initialize from localStorage so login persists across pages/refresh
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem("appPassword");
-      if (stored) {
-        setPassword(stored);
-        setIsAuthorized(true);
-        setRememberMe(true);
-        // set axios default header for convenience
-        axios.defaults.headers.common['x-app-password'] = stored;
-      }
-    } catch (e) {
-      // ignore
+    const stored = localStorage.getItem("appPassword");
+    if (stored) {
+      axios.post("https://plant-watering.onrender.com/api/auth", { password: stored })
+        .then(res => {
+          if (res.data.success) {
+            setPassword(stored);
+            setIsAuthorized(true);
+            axios.defaults.headers.common["x-app-password"] = stored;
+          } else {
+            localStorage.removeItem("appPassword");
+          }
+        })
+        .catch(() => {
+          localStorage.removeItem("appPassword");
+        });
     }
   }, []);
 
-  const handleLogin = () => {
-    if (password) {
-      setIsAuthorized(true);
-      // if user opted to remember, persist; otherwise keep in-memory only
-      try { if (rememberMe) localStorage.setItem("appPassword", password); } catch (e) {}
-      // set axios default header globally for this session
-      axios.defaults.headers.common['x-app-password'] = password;
+  const handleLogin = async () => {
+    if (!password) return;
+
+    try {
+      const res = await axios.post("https://plant-watering.onrender.com/api/auth", { password });
+
+      if (res.data.success) {
+        // password correct
+        setIsAuthorized(true);
+        axios.defaults.headers.common["x-app-password"] = password;
+
+        if (rememberMe) {
+          localStorage.setItem("appPassword", password);
+        }
+      }
+    } catch (err) {
+      alert("Väärä salasana!");
+      setIsAuthorized(false);
     }
   };
+
 
   const handleLogout = () => {
     setIsAuthorized(false);
@@ -93,12 +109,6 @@ function App() {
       <div className="max-w-5xl mx-auto p-6">
         <header className="flex items-center justify-between mb-6">
           <h1 className="text-8xl font-extrabold tracking-tight">Kasvien kastelu</h1>
-          <div className="flex items-center space-x-3">
-            <Link to="/add" className="bg-green-500 hover:bg-green-600 text-black px-4 py-2 rounded-md font-semibold">Lisää kasvi</Link>
-            {isAuthorized && (
-              <button onClick={handleLogout} className="px-3 py-2 border rounded text-sm">Kirjaudu ulos</button>
-            )}
-          </div>
         </header>
 
         <nav className="mb-4">
@@ -127,6 +137,12 @@ function App() {
           <Route path="/plants" element={<PlantsPage password={password} />} />
           <Route path="/positions" element={<PositionsPage password={password} />} />
         </Routes>
+      </div>
+      <div className="flex items-center space-x-3">
+        <Link to="/add" className="bg-green-500 hover:bg-green-600 text-black px-4 py-2 rounded-md font-semibold">Lisää kasvi</Link>
+        {isAuthorized && (
+          <button onClick={handleLogout} className="px-3 py-2 border rounded text-sm">Kirjaudu ulos</button>
+        )}
       </div>
     </div>
   );

@@ -23,6 +23,19 @@ app.use(cors({
 }));
 app.use(bodyParser.json());
 
+// ===== 3️⃣ Auth route (for frontend login) =====
+app.post("/api/auth", (req, res) => {
+  const { password } = req.body;
+  if (!PASSWORD) {
+    return res.json({ success: true, message: "No password required" });
+  }
+  if (password === PASSWORD) {
+    return res.json({ success: true });
+  } else {
+    return res.status(401).json({ success: false, message: "Invalid password" });
+  }
+});
+
 // Simple shared password authentication
 app.use((req, res, next) => {
   if (!PASSWORD) return next(); // no password set, allow all
