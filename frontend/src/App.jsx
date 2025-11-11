@@ -138,7 +138,7 @@ function App() {
           <Route path="/positions" element={<PositionsPage password={password} />} />
         </Routes>
       </div>
-      <div className="flex justify-center gap-4 p-6 bg-black/50">
+      <div className="flex justify-center gap-4 p-6">
         <Link to="/add" className="bg-green-500 hover:bg-green-600 text-black px-4 py-2 rounded-md font-semibold">Lisää kasvi</Link>
         {isAuthorized && (
           <button onClick={handleLogout} className="px-3 py-2 border rounded text-sm">Kirjaudu ulos</button>
