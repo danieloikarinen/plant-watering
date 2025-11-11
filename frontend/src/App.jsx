@@ -105,8 +105,8 @@ function App() {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-neutral-900 to-black text-gray-100">
-      <div className="max-w-5xl mx-auto p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-neutral-900 to-black text-gray-100 flex flex-col">
+      <div className="max-w-5xl mx-auto p-6 flex-1">
         <header className="flex items-center justify-between mb-6">
           <h1 className="text-8xl font-extrabold tracking-tight">Kasvien kastelu</h1>
         </header>
@@ -138,7 +138,7 @@ function App() {
           <Route path="/positions" element={<PositionsPage password={password} />} />
         </Routes>
       </div>
-      <div className="flex items-center space-x-3">
+      <div className="flex justify-center gap-4 p-6 bg-black/50">
         <Link to="/add" className="bg-green-500 hover:bg-green-600 text-black px-4 py-2 rounded-md font-semibold">Lisää kasvi</Link>
         {isAuthorized && (
           <button onClick={handleLogout} className="px-3 py-2 border rounded text-sm">Kirjaudu ulos</button>

@@ -222,7 +222,7 @@ if (!mongoUri) {
 }
 
 mongoose
-  .connect(mongoUri)
+  .connect(mongoUri, {dbName: 'prod'})
   .then(() => {
     console.log('✅ Connected to MongoDB');
     app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
